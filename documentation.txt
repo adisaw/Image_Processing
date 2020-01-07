@@ -1,0 +1,96 @@
+Day 1
+
+Declaring 
+Greyscale image:
+Mat img(imgrows,imgcols,CV_8UC1,Scalar(0));
+
+Coloured image:
+Mat img(imgrows,imgcols,CV_8UC3,Scalar(0,0,0));
+
+Required header files
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/core/core.hpp"
+using namespace cv;
+
+Displaying an image
+namedWindow("win",WINDOW_NORMAL);
+imshow("win",img);
+waitKey(0);
+
+Assigning intensity
+
+img.at<uchar>(10,20)=50;
+img.at<Vec3b>(i,j)={50,60,70};
+img.at<Vec3b>(i,j)[0]=90;
+
+img.rows gives number of rows of img
+img.cols gives number of columns of img
+
+
+Day 2
+
+Converting image to Grey Scale
+ 
+ 1. average of R,G, B
+	intensity=(R+G+B)/3
+ 
+ 2. intensity=(max(R,G,B)+min(R,G,B))/2
+
+ 3. intensity=0.21*R+0.72*G+0.07*B
+
+Creating Trackbar
+
+#include<iostream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/core/core.hpp"
+using namespace cv;
+using namespace std;
+Mat img=imread("fcgoa.jpg",1);
+Mat img2(img.rows,img.cols,CV_8UC1,Scalar(0));
+
+void updatefunc(int t,void *)
+{
+	
+	for(int i=0;i<img.rows;i++)
+	{
+		for(int j=0;j<img.cols;j++)
+		{
+			int temp;
+			temp=img.at<Vec3b>(i,j)[0]+img.at<Vec3b>(i,j)[1]+img.at<Vec3b>(i,j)[2];
+			temp=temp/3;
+										
+			if(temp<t)					
+			img2.at<uchar>(i,j)=0;
+			else
+			img2.at<uchar>(i,j)=255;
+		}
+	}
+	
+	imshow("win",img2);
+}	
+int main()
+{
+	int th=0;
+	namedWindow("win",WINDOW_NORMAL);	
+	createTrackbar("ok","win",&th,255,updatefunc);
+	waitKey(0);
+	return 0;
+}
+
+Brightness increase all pixel by value some alpha
+Contrast multipy all pixels by some alpha
+
+Gaussian Blur
+	|1/16 1/8 1/16|
+matrix= |1/8  1/4 1/8 |
+	|1/16 1/8 1/16|
+
+Mean Blur
+take the mean of all 9 pixels in kernel and put it in center pixel of kernel
+
+Median blur
+Put the median of all 9 pixels in kernel in center pixel
+
+
